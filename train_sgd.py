@@ -13,7 +13,7 @@ data_folder = "C:/Users/Burak/PycharmProjects/mammography/data/mass_calc"
 #X_train = np.load("data/nopca/X_train.npy")
 Y_train = np.load(data_folder + "/Y_train.npy")
 
-clf = SGDClassifier(learning_rate='constant', eta0=0.1, shuffle=True)
+clf = SGDClassifier(shuffle=True)
 
 print("Step 1:")
 

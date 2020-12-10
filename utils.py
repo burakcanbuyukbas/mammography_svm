@@ -54,14 +54,14 @@ def load_data(X_path='/X.npy', Y_path='/Y.npy'):
 def load_from_npy():
     print("Loading data...")
     X_Train = np.load(data_folder + '/X_train.npy', mmap_mode='r')
-    X_Test = np.load(data_folder + '/X_test.npy', mmap_mode='r')
+    X_Test = np.load(data_folder + '/X_val.npy', mmap_mode='r')
     Y_Train = np.load(data_folder + '/Y_train.npy', mmap_mode='r')
-    Y_Test = np.load(data_folder + '/Y_test.npy', mmap_mode='r')
-    print("Train Benign: " + str(np.count_nonzero(Y_Train == 0)))
-    print("Train Malignant: " + str(np.count_nonzero(Y_Train == 1)))
+    Y_Test = np.load(data_folder + '/Y_val.npy', mmap_mode='r')
+    print("Train Class1: " + str(np.count_nonzero(Y_Train == 0)))
+    print("Train Class2: " + str(np.count_nonzero(Y_Train == 1)))
 
-    print("Test Benign: " + str(np.count_nonzero(Y_Test == 0)))
-    print("Test Malignant: " + str(np.count_nonzero(Y_Test == 1)))
+    print("Test Class1: " + str(np.count_nonzero(Y_Test == 0)))
+    print("Test Class2: " + str(np.count_nonzero(Y_Test == 1)))
 
     return X_Train, Y_Train, X_Test, Y_Test
 
@@ -69,8 +69,8 @@ def load_train():
     print("Loading data...")
     X_Train = np.load(data_folder + '/X_train.npy', mmap_mode='r')
     Y_Train = np.load(data_folder + '/Y_train.npy', mmap_mode='r')
-    print("Train Benign: " + str(np.count_nonzero(Y_Train == 0)))
-    print("Train Malignant: " + str(np.count_nonzero(Y_Train == 1)))
+    print("Train Class1: " + str(np.count_nonzero(Y_Train == 0)))
+    print("Train Class2: " + str(np.count_nonzero(Y_Train == 1)))
     return X_Train, Y_Train
 
 def load_test():
@@ -78,8 +78,8 @@ def load_test():
     X_Test = np.load(data_folder + '/X_test.npy', mmap_mode='r')
     Y_Test = np.load(data_folder + '/Y_test.npy', mmap_mode='r')
 
-    print("Test Benign: " + str(np.count_nonzero(Y_Test == 0)))
-    print("Test Malignant: " + str(np.count_nonzero(Y_Test == 1)))
+    print("Test Class1: " + str(np.count_nonzero(Y_Test == 0)))
+    print("Test Class2: " + str(np.count_nonzero(Y_Test == 1)))
     return X_Test, Y_Test
 
 def npy_to_h5(path="/X_train.npy"):
@@ -91,4 +91,5 @@ def npy_to_h5(path="/X_train.npy"):
 
     with h5py.File('data/X_train.h5', 'w') as hf:
         hf.create_dataset("data", data=data)
+
 

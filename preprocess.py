@@ -10,7 +10,12 @@ import h5py
 from tqdm import tqdm
 import os
 from utils import *
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from numpy.random import *
+from numpy.linalg import *
 
+
+data_dir = "C:/Users/Burak/PycharmProjects/mammography/data/mass_calc/"
 
 def get_PCA_data():
     print("Loading data...")
@@ -102,12 +107,51 @@ def npy_to_npy_batches(size = 600):
         xpart = xpart.flatten().reshape(batch_size, 128*128*3)
         np.save("data_batches/X" + str(i) + ".npy", xpart)
 
+def apply_lda(components=1, path="data/X_train.h5", target="data/lda/"):
+    X = np.load(data_dir + "X_train.npy", mmap_mode='r').astype('float32')
+    X = X.flatten().reshape(2860, 128*128*3)
 
-#npy_to_npy_batches()
-#npy_to_h5(path='/X_train.npy')
+    # X, Y = get_data()
+    Y = np.load(data_dir + "Y_train.npy")
+    print(X.shape)
+    lda = LinearDiscriminantAnalysis(solver='svd', n_components=components)
+    lda.fit(X, Y)
 
-#do_incremental_pca(batch=100, components=100, path="data/X_train.h5", target="data_batches/pca100")
-#concat_data(folder="data_batches/pca100")
+    X_train = lda.transform(X)
+    np.save(target + 'X_train.npy', X_train)
+    np.save(target + 'Y_train.npy', Y)
+
+    del X, Y
+
+    X_val = np.load(data_dir + "X_val.npy", mmap_mode='r').astype('float32')
+    Y_val = np.load(data_dir + "Y_val.npy")
+    Xvalshape = X_val.shape
+    X_val = X_val.flatten().reshape(Xvalshape[0], Xvalshape[1]*Xvalshape[2]*Xvalshape[3])
+
+    X_val = lda.transform(X_val)
+    np.save(target + 'X_val.npy', X_val)
+    np.save(target + 'Y_val.npy', Y_val)
+
+    del X_val, Y_val
+
+    X_test = np.load(data_dir + "X_test.npy", mmap_mode='r').astype('float32')
+    Y_test = np.load(data_dir + "Y_test.npy")
+    Xtestshape = X_test.shape
+    X_test = X_test.flatten().reshape(Xtestshape[0], Xtestshape[1]*Xtestshape[2]*Xtestshape[3])
+
+    X_test = lda.transform(X_test)
+    np.save(target + 'X_test.npy', X_test)
+    np.save(target + 'Y_test.npy', Y_test)
+
+
+
+apply_lda()
+
+# npy_to_npy_batches()
+# npy_to_h5(path='/X_train.npy')
+
+# do_incremental_pca(batch=100, components=100, path="data/X_train.h5", target="data_batches/pca100")
+# concat_data(folder="data_batches/pca100")
 
 #do_incremental_pca_on_test(batch=100, components=100, path="data/X_train.h5", target="data_batches/pca100/test")
 #concat_data(folder="data_batches/pca100/test", target="data/X_test", count=5)
